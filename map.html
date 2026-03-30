@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>Electric Map</title>
+<link
+ rel="stylesheet"
+ href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+/>
+<style>
+html, body {
+  margin:0;
+  padding:0;
+  height:100%;
+}
+#map {
+  height:100vh;
+  width:100%;
+}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// 地図初期化
+const map = L.map('map').setView([32.5,130.5],8);
+// タイル
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  attribution:'&copy; OpenStreetMap contributors'
+}).addTo(map);
+// 会社ごとの色設定
+const operatorColors = {
+  "営業所":"blue",
+  "火力発電所":"red",
+  "原子力発電所":"yellow",
+  "水力発電所":"aqua",
+};
+// JSON読み込み
+fetch('branch.json')
+.then(response => response.json())
+.then(data => {
+  data.forEach(station => {
+    const color = operatorColors[station.operator] || "gray";
+    const addressItem = station.address
+      ? `<li>${station.address}</li>`
+      : '';
+    L.circleMarker([station.lat,station.lng],{
+      radius:5,
+      color:"black",
+      fillColor:color,
+      fillOpacity:0.9
+    })
+    .addTo(map)
+    .bindPopup(`
+      <ul style="margin:0;padding-left:18px;">
+        <li>${station.name}</li>
+        <li>${station.operator}</li>
+        ${addressItem}
+      </ul>
+    `);
+  });
+})
+.catch(error=>{
+  console.error("JSON読み込みエラー:",error);
+});
+</script>
+</body>
+</html>

@@ -47,7 +47,7 @@ fetch('branch.json')
       : '';
       // ① 見かけの点
       L.circleMarker([station.lat, station.lng], {
-        radius: 10,
+        radius: 15,
         color: "black",
         fillColor: color,
         fillOpacity: 0.9
@@ -55,7 +55,7 @@ fetch('branch.json')
 
       // ② 当たり判定用
       L.circleMarker([station.lat, station.lng], {
-        radius: 15,
+        radius: 20,
         color: "transparent",
         fillColor: "transparent",
         fillOpacity: 0,

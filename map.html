@@ -45,21 +45,30 @@ fetch('branch.json')
     const addressItem = station.address
       ? `<li>${station.address}</li>`
       : '';
-    L.circleMarker([station.lat,station.lng],{
-      radius:5,
-      color:"black",
-      fillColor:color,
-      fillOpacity:0.9
-    })
-    .addTo(map)
-    .bindPopup(`
-      <ul style="margin:0;padding-left:18px;">
-        <li>${station.name}</li>
-        <li>${station.operator}</li>
-        ${addressItem}
-      </ul>
-    `);
-  });
+      // ① 見かけの点
+      L.circleMarker([station.lat, station.lng], {
+        radius: 10,
+        color: "black",
+        fillColor: color,
+        fillOpacity: 0.9
+      }).addTo(map);
+
+      // ② 当たり判定用
+      L.circleMarker([station.lat, station.lng], {
+        radius: 15,
+        color: "transparent",
+        fillColor: "transparent",
+        fillOpacity: 0,
+      })
+      .addTo(map)
+      .bindPopup(`
+        <ul style="margin:0;padding-left:18px;">
+          <li>${station.name}</li>
+          <li>${station.operator}</li>
+          ${addressItem}
+        </ul>
+      `);
+    });
 })
 .catch(error=>{
   console.error("JSON読み込みエラー:",error);
